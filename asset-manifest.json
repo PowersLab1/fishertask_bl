@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/fishertask_bl/static/css/main.f45e64f2.chunk.css",
+    "main.js": "/fishertask_bl/static/js/main.031179e6.chunk.js",
+    "main.js.map": "/fishertask_bl/static/js/main.031179e6.chunk.js.map",
+    "runtime-main.js": "/fishertask_bl/static/js/runtime-main.0f81d83c.js",
+    "runtime-main.js.map": "/fishertask_bl/static/js/runtime-main.0f81d83c.js.map",
+    "static/js/2.f9c68e44.chunk.js": "/fishertask_bl/static/js/2.f9c68e44.chunk.js",
+    "static/js/2.f9c68e44.chunk.js.map": "/fishertask_bl/static/js/2.f9c68e44.chunk.js.map",
+    "index.html": "/fishertask_bl/index.html",
+    "precache-manifest.968f286bd7d52d5bc5dc2472ce05c03b.js": "/fishertask_bl/precache-manifest.968f286bd7d52d5bc5dc2472ce05c03b.js",
+    "service-worker.js": "/fishertask_bl/service-worker.js",
+    "static/css/main.f45e64f2.chunk.css.map": "/fishertask_bl/static/css/main.f45e64f2.chunk.css.map",
+    "static/js/2.f9c68e44.chunk.js.LICENSE.txt": "/fishertask_bl/static/js/2.f9c68e44.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.0f81d83c.js",
+    "static/js/2.f9c68e44.chunk.js",
+    "static/css/main.f45e64f2.chunk.css",
+    "static/js/main.031179e6.chunk.js"
+  ]
+}

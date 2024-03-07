@@ -1,0 +1,37 @@
+
+#experimentContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+#trialContainer {
+    display: flex;
+    align-items: center; /* This centers the items vertically. Adjust if needed */
+    justify-content: center; /* Center the items horizontally within the container */
+}
+#fishImagesContainer {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+#fishImagesContainer img {
+    width: 100px; /* Adjust as necessary */
+    height: 100px;
+}
+#fish1Container {
+    position: relative;
+    display: inline-block; /* Ensure this container fits the content */
+    border: none; /* Creates a black outline */
+    /* Adjust width and height as per the expected size of fish1 images */
+    width: 105px; /* Needs to be slightly larger than 100px fish image to show up */
+    height: 105px; /* Needs to be slightly larger than 100px fish image size to show up */
+    box-sizing: border-box; /* Ensures border width is included in the width/height */
+}
+#arrowImage {
+    width: 100px; 
+    margin-left: 10px; /* Adds some space between the fish images and the arrow */
+}
+#feedback {
+    margin-left: auto;
+    margin-right: auto;
+}
