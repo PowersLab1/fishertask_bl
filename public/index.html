@@ -23,9 +23,16 @@
 </head>
 <body>
     <div id="instructions">Instructions</div>
-    <!-- <img id="image" src="" alt="Trial Image" style="display:none;"> -->
+
     <div id="experimentContainer">
-        <img id="pondsImage" src="stimuli/ponds.png" style="display: none;">
+        <div id="pondsContainer" style="display: none;">
+            <img id="pondsImage" src="stimuli/ponds.png">
+            <div id="overlay">
+                <div id="leftPondOverlay"></div>
+                <div id="middlePondOverlay"></div>
+                <div id="rightPondOverlay"></div>
+            </div>
+        </div>
         <div id="trialContainer" style="display: flex; align-items: center;">
             <div id="fishImagesContainer">
                 <img id="fish5Image" src="" alt="Fish 5 Image" style="width: 100; height: 100; display: none;">
@@ -44,6 +51,6 @@
 
     
 
-    <script src="experiment.js"></script>
+    <script src="script.js"></script>
 </body>
 </html>
