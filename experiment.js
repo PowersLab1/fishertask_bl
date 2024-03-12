@@ -1,14 +1,24 @@
 document.addEventListener('DOMContentLoaded', () => {
     const instructionsDiv = document.getElementById('instructions');
-    const imageElement = document.getElementById('image');
     const feedbackDiv = document.getElementById('feedback');
-    const colors = ["red", "blue", "green"];
+    const experimentDiv = document.getElementById("experimentContainer");
+    const pondsImage = document.getElementById('pondsImage');
+    // Call resizeOverlays function when the image has loaded
+    
+    
+    pondsImage.addEventListener('load', resizeOverlays);
+    
+
+    // Call resizeOverlays function when the window is resized
+    window.addEventListener('resize', resizeOverlays);
+    
+    // const colors = ["red", "blue", "green"];
     // const baseUrl = "https://raw.githubusercontent.com/maxsupergreenwald/FisherResources/main/resources/";
-    let experimentData = [];
+    let experimentData = []; // Will hold JSON data from experiment trials
     let currentBlock = 0;
     let currentTrial = 0;
     let instructionStage = 0; // Tracks instruction stages (introduction vs. practice-to-experiment transition)
-    let sessionType = 'practice'; // Alternates between 'practice' and 'real'
+    let sessionType = 'practice'; // Transitions from 'practice' to 'intersession' to 'real'
     let blockTrials; // Will hold trials for the current block
     
     // Set block orders for practice and real experiment
@@ -18,20 +28,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const blockOrderC = [mainTrials6, mainTrials7, mainTrials8, mainTrials1, mainTrials2, mainTrials4, mainTrials3, mainTrials9, mainTrials5, mainTrials10];
     let blockOrder;
     setBlockOrder(); 
-    console.log("blockOrder: " + blockOrder)
+    
     function setBlockOrder() {
         const randomIndex = Math.floor(Math.random() * 3);
+        console.log("randomIndex: " + randomIndex)
         switch (randomIndex) {
             case 0: blockOrder = blockOrderA; break;
             case 1: blockOrder = blockOrderB; break;
             case 2: blockOrder = blockOrderC; break;
         }
     }
+
     
     // Generate trials for practice and real experiment
     const practiceTrialsInfo = generateJStrials(practiceOrder);
     const realTrialsInfo = generateJStrials(blockOrder);
-    let trialsInfo = practiceTrialsInfo;
 
     function generateJStrials(blocksArray) {
         let allTrials = [];
@@ -39,9 +50,7 @@ document.addEventListener('DOMContentLoaded', () => {
         for (let blockIndex = 0; blockIndex < blocksArray.length; blockIndex++) {
             let blockTrials = blocksArray[blockIndex];
             allTrials = allTrials.concat([blockTrials]);
-            console.log("allTrials 1: " + allTrials)
         }
-        console.log("allTrials 2: " + allTrials)
         return allTrials;
     }
 
@@ -82,20 +91,15 @@ document.addEventListener('DOMContentLoaded', () => {
     
     // Function to start the practice or real experiment session
     function startSession(sessionType) {
-        
-        console.log("trialsInfo: " + trialsInfo)
-        
-        // Reset trials and blocks for the new session
-        currentBlock = 1;
-        currentTrial = 0;
-        
+
         if (sessionType === "practice") {
             blockTrials = practiceTrialsInfo[currentBlock]; // Initialize with your actual trials data    
         } else {
             blockTrials = realTrialsInfo[currentBlock]; // Initialize with your actual trials data    
         }
-        console.log("blockTrials: " + JSON.stringify(blockTrials))
-
+        
+        console.log("currentBlock 1: " + currentBlock)
+    
         instructionsDiv.style.display = 'none';
         // Start trials or display inter-session instructions
         if (sessionType === 'practice' || sessionType === 'real') {
@@ -109,20 +113,28 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Function to handle the transition to the next trial or block
     function nextTrial() {
+        experimentDiv.style.display = 'block';
+        document.getElementById('leftPondOverlay').style.border = 'none';
+        document.getElementById('middlePondOverlay').style.border = 'none';
+        document.getElementById('rightPondOverlay').style.border = 'none';
+        
+        console.log("currentTrial: " + currentTrial)
+
         if (currentTrial < blockTrials.length) {
-            console.log("blockTrials[currentTrial]: " + blockTrials[currentTrial])
             displayTrial(blockTrials[currentTrial]);
             currentTrial++;
-        } else if (currentBlock < (sessionType === 'practice' ? practiceOrder.length : blockOrder.length)) { // number of blocks per practice/real session
+        } else if (currentBlock+1 < (sessionType === 'practice' ? practiceOrder.length : blockOrder.length)) { // number of blocks per practice/real session
             currentBlock++;
             currentTrial = 0;
+            // Hide trials div
+            experimentDiv.style.display = 'none';
             // Show resting display for 5 seconds before the next block
-            feedbackDiv.textContent = 'Rest for a moment. The next block will start in 5 seconds.';
-            feedbackDiv.style.display = 'block';
+            instructionsDiv.style.display = 'block';
+            instructionsDiv.textContent = 'Rest for a moment. Next day starts in 5 seconds.'
+
             setTimeout(() => {
                 feedbackDiv.style.display = 'none';
-                // blockTrials = trialsInfo.sessionType.slice(currentBlock * 20, (currentBlock + 1) * 20);
-                blockTrials = blockTrials.slice(currentBlock * 20, (currentBlock + 1) * 20);
+                blockTrials = blockTrials.slice(currentBlock * 20, (currentBlock + 1) * 20); // update blockTrials array
                 startSession(sessionType);
             }, 5000);
         } else if (sessionType === 'practice') {
@@ -142,45 +154,43 @@ document.addEventListener('DOMContentLoaded', () => {
         let startTime = Date.now();
         
         // Show ponds and arrow images
-        document.getElementById('pondsImage').style.display = 'block';
+        document.getElementById('pondsContainer').style.display = 'block';
         document.getElementById('arrowImage').style.display = 'block';
-        
-        // Reset fish images container for new trial
-        // const fishImagesContainer = document.getElementById('fishImagesContainer');
-        // fishImagesContainer.innerHTML = ''; // Clear existing fish images
         
         // Add border box
         document.getElementById('fish1Container').style.border = '2px solid black';
+        let boxTimeout = setTimeout(() => document.getElementById('fish1Container').style.border = '2px solid white', 2000);
 
         // Add fish images in specified order
         const fishOrder = [trial.fish1, trial.fish2, trial.fish3, trial.fish4, trial.fish5];
         let counter = 1;
         fishOrder.forEach(fish => {
             let elementId = 'fish' + counter.toString() + 'Image';
-            console.log("elementId: " + elementId)
             let fishImage = document.getElementById(elementId);
             fishImage.src = fish;
             fishImage.style.display = 'block';
             counter += 1;
-            // imgElement.src = fish;
-            // fishImagesContainer.appendChild(imgElement);
         });
         
-        // imageElement.src = trial.fish1;
-        // imageElement.style.display = 'block';
-        // Set feedback dive to none
+        // Clear feedback div every trial
         feedbackDiv.style.display = 'none';
 
         // Handle key response or timeout within the displayTrial function
         const responseHandler = (event) => {
             if (['ArrowLeft', 'ArrowUp', 'ArrowRight'].includes(event.key)) {
+                resizeOverlays();
+                if      (event.key === 'ArrowLeft')    {document.getElementById('leftPondOverlay').style.border = '3px solid black'; } 
+                else if (event.key === 'ArrowUp')      {document.getElementById('middlePondOverlay').style.border = '3px solid black'; }
+                else if (event.key === 'ArrowRight')   {document.getElementById('rightPondOverlay').style.border = '3px solid black'; }
+
+                document.getElementById('fish1Container').style.border = '2px solid white'
                 document.removeEventListener('keydown', responseHandler);
                 clearTimeout(timeoutHandle);
                 let reactionTime = Date.now() - startTime;
-                // let correct = event.key === trial.correctKey;
                 console.log("event.key: " + event.key)
                 let correct = event.key.toLowerCase().includes(trial.pond3);
                 recordResult(trial, reactionTime, event.key, correct);
+                clearTimeout(boxTimeout);
                 feedback(correct);
             }
         };
@@ -191,6 +201,7 @@ document.addEventListener('DOMContentLoaded', () => {
             feedbackDiv.textContent = 'Oops! Too slow.';
             feedbackDiv.style.display = 'block';
             recordResult(trial, 2000, 'none', false);
+            clearTimeout(boxTimeout);
             setTimeout(nextTrial, 1000); // Move to next trial after 1 second
         }, 2000);
 
@@ -203,12 +214,10 @@ document.addEventListener('DOMContentLoaded', () => {
             feedbackDiv.textContent = correct ? 'Correct!' : 'Incorrect!';
             feedbackDiv.style.display = 'block';
             setTimeout(() => {
-                // imageElement.style.display = 'none';
                 feedbackDiv.style.display = 'none';
                 nextTrial();
             }, 1000); // Show feedback for 1 second
         } else {
-            // imageElement.style.display = 'none';
             nextTrial();
         }
         
@@ -245,6 +254,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 instructionStage++;
             } else if (sessionType === 'inter-session' && instructionStage === interSessionInstructionTexts.length) {
                 // Start real experiment after the last inter-session instruction
+                sessionType = 'real';
                 startSession('real');
             }
         }
@@ -255,17 +265,42 @@ document.addEventListener('DOMContentLoaded', () => {
     function transitionToRealExperiment() {
         sessionType = 'inter-session';
         instructionsDiv.style.display = 'block';
-        document.getElementById("experimentContainer").style.display = 'none';
+        experimentDiv.style.display = 'none';
         instructionStage = 0; // Reset instruction stage for inter-session
         instructionsDiv.textContent = interSessionInstructionTexts[instructionStage];
     }
 
     // Function to end the experiment and send data to the server
     function endExperiment() {
+        experimentDiv.style.display = 'none';
         instructionsDiv.style.display = 'block';
         instructionsDiv.textContent = endInstructionText;
-        // Placeholder for sending data to the server
-        console.log('Experiment complete. Data:', experimentData);
+        
         // Implement data submission to server here
+        console.log('Experiment complete. Data:', experimentData);
+        window.postMessage({
+            type: 'labjs.data',
+            json: JSON.stringify(experimentData)
+        }, '*');
+        
     }
+
+    function resizeOverlays() {
+        setTimeout(function() {
+            const imageWidth = pondsImage.offsetWidth;
+            const imageLeft = pondsImage.getBoundingClientRect().left - 5;
+            const overlayWidth = Math.min(imageWidth / 3 - 5, 333);
+            
+            console.log("imageLeft: " + imageLeft);
+    
+            leftPondOverlay.style.width = `${overlayWidth}px`;
+            middlePondOverlay.style.width = `${overlayWidth}px`;
+            rightPondOverlay.style.width = `${overlayWidth}px`;
+    
+            leftPondOverlay.style.left = `${imageLeft}px`;
+            middlePondOverlay.style.left = `${imageLeft + overlayWidth}px`;
+            rightPondOverlay.style.left = `${imageLeft + 2*overlayWidth}px`;
+        }, 500); // Even a 0ms timeout can help by pushing the function to the end of the call stack
+    }
+
 });
