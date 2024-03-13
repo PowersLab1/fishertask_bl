@@ -159,26 +159,33 @@ class LabJsWrapper extends Component {
   }
 
   render() {
+    // Handle error state first
     if (_.isUndefined(this.state.encryptedMetadata)) {
       return (
         <div>
           <h2>Something went wrong. Please try again.</h2>
         </div>
       );
-    } else if (!_.isUndefined(this.state.link)) {
+    }
+  
+    // Handle redirect if link is defined
+    if (!_.isUndefined(this.state.link)) {
       window.location.assign(this.state.link);
     }
-
-    return (
-      <div>
-        <div className="container fullscreen" data-labjs-section="main" style={{visibility: this.state.sendingData ? 'hidden' : 'visible'}}>
-        </div>
-        <div className="center" style={{visibility: this.state.sendingData ? 'visible' : 'hidden'}}>
+  
+    // Now, conditionally render based on sendingData state
+    if (this.state.sendingData) {
+      // Show saving message when sending data
+      return (
+        <div className="center" style={{visibility: 'visible'}}>
           <h2>Saving data... do not exit window. Check internet and Refresh if stuck here for over 30 seconds.</h2>
           <p>If you lost internet connection during the game, then the game will restart and you will need to play again.</p>
         </div>
-      </div>
-    );
+      );
+    } else {
+      // When not sending data, return null or a minimal non-visual component
+      return null;
+    }
   } // end render
 } // end class
 
