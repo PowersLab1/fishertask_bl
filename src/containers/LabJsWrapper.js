@@ -173,10 +173,10 @@ class LabJsWrapper extends Component {
       <div>
         <div className="container fullscreen" data-labjs-section="main" style={{visibility: this.state.sendingData ? 'hidden' : 'visible'}}>
           <main className="content-vertical-center content-horizontal-center">
-            {/* <div>
+            {<div>
               <h2>Loading Experiment</h2>
               <p>The experiment is loading and should start in a few seconds</p>
-            </div> */}
+            </div> }
           </main>
         </div>
         <div className="center" style={{visibility: this.state.sendingData ? 'visible' : 'hidden'}}>
