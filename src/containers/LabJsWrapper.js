@@ -172,12 +172,6 @@ class LabJsWrapper extends Component {
     return (
       <div>
         <div className="container fullscreen" data-labjs-section="main" style={{visibility: this.state.sendingData ? 'hidden' : 'visible'}}>
-          <main className="content-vertical-center content-horizontal-center">
-            {<div>
-              <h2>Loading Experiment</h2>
-              <p>The experiment is loading and should start in a few seconds</p>
-            </div> }
-          </main>
         </div>
         <div className="center" style={{visibility: this.state.sendingData ? 'visible' : 'hidden'}}>
           <h2>Saving data... do not exit window. Check internet and Refresh if stuck here for over 30 seconds.</h2>
