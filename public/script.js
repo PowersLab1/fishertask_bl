@@ -84,7 +84,7 @@ document.addEventListener('DOMContentLoaded', () => {
             "\n\nPress SPACE bar to start."
     ];
 
-    const endInstructionText = "Thank you for completing the experiment. You may close the window now.";
+    const endInstructionText = " ";
     
     // Display the first set of instructions initially
     instructionsDiv.textContent = initialInstructionTexts[0];
