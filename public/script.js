@@ -57,37 +57,38 @@ document.addEventListener('DOMContentLoaded', () => {
     // Instructions text for each of the screens
     const initialInstructionTexts = [
         "Welcome to the Which Pond? Game"+
-            "\n\nPress SPACE bar to continue.",
+            "<br><br><br>Press SPACE bar to continue.",
         "Which Pond? Fishing Game"+
-            "\n\nImagine a boy that goes fishing for 10 days." +
-            "\n\nThere are three ponds, each containing fish of different colors: blue, yellow, and green." +
-            "\n\nIn each pond the majority of the fish are of a single color."+
-            "\n\nPress SPACE bar to proceed.",
+            "<br><br>Imagine a boy that goes fishing for 10 days." +
+            "<br><br>There are three ponds, each containing fish of different colors: blue, yellow, and green." +
+            "<br><br>In each pond the majority of the fish are of a single color."+
+            "<br><br><br>Press SPACE bar to proceed.",
         "Each day, the boy catches 15 fish. He will show you the fish he catches one by one, shown in the black square." +
-            '\n\nEach turn, you will guess from which pond he is fishing.' +
-            '\n\nThe boy will pick a different pond at the beginning of a new day, and he may or may not change ponds within the same day.' + 
-            '\n\nPress SPACE bar to proceed.',
+            '<br><br>Each turn, you will guess from which pond he is fishing.' +
+            '<br><br>The boy will pick a different pond at the beginning of a new day, and he may or may not change ponds within the same day.' + 
+            '<br><br><br>Press SPACE bar to proceed.',
         'A correct guess is rewarded with $1, while an incorrect guess earns $0.' +
-            '\n\nAt the end of the game, you will receive the total bonus from one randomly selected session.' + 
-            '\n\nThe maximum bonus you can receive from this game is $15, if you guess correctly for all trials.' +
-            '\n\nPress SPACE bar to continue',
+            '<br><br>At the end of the game, you will receive the total bonus from one randomly selected session.' + 
+            '<br><br>The maximum bonus you can receive from this game is $15, if you guess correctly for all trials.' +
+            '<br><br><br>Press SPACE bar to continue',
         'Press LEFT, UP or RIGHT arrows on your keyboard to select your pond.' +
-            '\n\nPress SPACE bar to start the practice session.'
+            '<br><br><br>Press SPACE bar to start the practice session.'
     ];
     
     const interSessionInstructionTexts = [
         "Practice session complete." +
-            "\n\nPress SPACE bar to continue.",
+            "<br><br><br>Press SPACE bar to continue.",
         "The real experiment will now begin." +
-            '\n\nPress LEFT, UP or RIGHT arrows on your keyboard to select your pond.' +
-            "\n\nTry to respond as quickly and accurately as possible." +
-            "\n\nPress SPACE bar to start."
+            '<br><br>Press LEFT, UP or RIGHT arrows on your keyboard to select your pond.' +
+            "<br><br>Try to respond as quickly and accurately as possible." +
+            "<br><br><br>Press SPACE bar to start."
     ];
 
     const endInstructionText = " ";
+    // const endInstructionText = "Thank you for completing the experiment. You may close the window now.";
     
     // Display the first set of instructions initially
-    instructionsDiv.textContent = initialInstructionTexts[0];
+    instructionsDiv.innerHTML = initialInstructionTexts[0];
     
     // Function to start the practice or real experiment session
     function startSession(sessionType) {
@@ -106,7 +107,7 @@ document.addEventListener('DOMContentLoaded', () => {
             nextTrial();
         } else if (sessionType === 'inter-session') {
             instructionStage = 0; // Reset instruction stage for inter-session instructions
-            instructionsDiv.textContent = interSessionInstructionTexts[instructionStage];
+            instructionsDiv.innerHTML = interSessionInstructionTexts[instructionStage];
             instructionsDiv.style.display = 'block';
         }
     }
@@ -130,7 +131,7 @@ document.addEventListener('DOMContentLoaded', () => {
             experimentDiv.style.display = 'none';
             // Show resting display for 5 seconds before the next block
             instructionsDiv.style.display = 'block';
-            instructionsDiv.textContent = 'Rest for a moment. Next day starts in 5 seconds.'
+            instructionsDiv.innerHTML = 'Rest for a moment. Next day starts in 5 seconds.'
 
             setTimeout(() => {
                 feedbackDiv.style.display = 'none';
@@ -150,68 +151,169 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Function to display a trial and handle its timing and response capture
-    function displayTrial(trial) {
-        let startTime = Date.now();
+    // function displayTrial(trial) {
+    //     let startTime = Date.now();
         
-        // Show ponds and arrow images
-        document.getElementById('pondsContainer').style.display = 'block';
-        document.getElementById('arrowImage').style.display = 'block';
+    //     // Show ponds and arrow images
+    //     document.getElementById('pondsContainer').style.display = 'block';
+    //     document.getElementById('arrowImage').style.display = 'block';
         
-        // Add border box
-        document.getElementById('fish1Container').style.border = '2px solid black';
-        let boxTimeout = setTimeout(() => document.getElementById('fish1Container').style.border = '2px solid white', 2000);
+    //     // Add border box
+    //     document.getElementById('fish1Container').style.border = '2px solid black';
+    //     let boxTimeout = setTimeout(() => document.getElementById('fish1Container').style.border = '2px solid white', 2000);
 
-        // Add fish images in specified order
-        const fishOrder = [trial.fish1, trial.fish2, trial.fish3, trial.fish4, trial.fish5];
-        let counter = 1;
-        fishOrder.forEach(fish => {
-            let elementId = 'fish' + counter.toString() + 'Image';
-            let fishImage = document.getElementById(elementId);
-            fishImage.src = fish;
-            fishImage.style.display = 'block';
-            counter += 1;
-        });
+    //     // Add fish images in specified order
+    //     const fishOrder = [trial.fish1, trial.fish2, trial.fish3, trial.fish4, trial.fish5];
+    //     let counter = 1;
+    //     fishOrder.forEach(fish => {
+    //         let elementId = 'fish' + counter.toString() + 'Image';
+    //         let fishImage = document.getElementById(elementId);
+    //         fishImage.src = fish;
+    //         fishImage.style.display = 'block';
+    //         counter += 1;
+    //     });
         
-        // Clear feedback div every trial
-        feedbackDiv.style.display = 'none';
+    //     // Clear feedback div every trial
+    //     feedbackDiv.style.display = 'none';
 
-        // Handle key response or timeout within the displayTrial function
-        const responseHandler = (event) => {
-            if (['ArrowLeft', 'ArrowUp', 'ArrowRight'].includes(event.key)) {
-                resizeOverlays();
-                if      (event.key === 'ArrowLeft')    {document.getElementById('leftPondOverlay').style.border = '3px solid black'; } 
-                else if (event.key === 'ArrowUp')      {document.getElementById('middlePondOverlay').style.border = '3px solid black'; }
-                else if (event.key === 'ArrowRight')   {document.getElementById('rightPondOverlay').style.border = '3px solid black'; }
+    //     // Handle key response or timeout within the displayTrial function
+    //     const responseHandler = (event) => {
+    //         if (['ArrowLeft', 'ArrowUp', 'ArrowRight'].includes(event.key)) {
+    //             resizeOverlays();
+    //             if      (event.key === 'ArrowLeft')    {document.getElementById('leftPondOverlay').style.border = '3px solid black'; } 
+    //             else if (event.key === 'ArrowUp')      {document.getElementById('middlePondOverlay').style.border = '3px solid black'; }
+    //             else if (event.key === 'ArrowRight')   {document.getElementById('rightPondOverlay').style.border = '3px solid black'; }
 
-                document.getElementById('fish1Container').style.border = '2px solid white'
-                document.removeEventListener('keydown', responseHandler);
-                clearTimeout(timeoutHandle);
-                let reactionTime = Date.now() - startTime;
-                console.log("event.key: " + event.key)
-                let correct = event.key.toLowerCase().includes(trial.pond3);
-                recordResult(trial, reactionTime, event.key, correct);
-                clearTimeout(boxTimeout);
-                feedback(correct);
+    //             document.getElementById('fish1Container').style.border = '2px solid white'
+    //             document.removeEventListener('keydown', responseHandler);
+    //             clearTimeout(timeoutHandle);
+    //             let reactionTime = Date.now() - startTime;
+    //             console.log("event.key: " + event.key)
+    //             let correct = event.key.toLowerCase().includes(trial.pond3);
+    //             recordResult(trial, reactionTime, event.key, correct);
+    //             clearTimeout(boxTimeout);
+    //             feedback(correct);
+    //         }
+    //     };
+
+    //     // Set a timeout for the trial
+    //     const timeoutHandle = setTimeout(() => {
+    //         document.removeEventListener('keydown', responseHandler);
+    //         feedbackDiv.innerHTML = 'Oops! Too slow.';
+    //         feedbackDiv.style.display = 'block';
+    //         recordResult(trial, 2000, 'none', false);
+    //         clearTimeout(boxTimeout);
+    //         setTimeout(nextTrial, 1000); // Move to next trial after 1 second
+    //     }, 2000);
+
+    //     document.addEventListener('keydown', responseHandler);
+    // }
+    // Store the responseHandler function outside of displayTrial
+let responseHandler;
+let keyHeldDown = false; // Flag to track if a key is being held down
+
+function displayTrial(trial) {
+    let startTime = Date.now();
+    let keydownHandled = false; // Flag to track if a key press has been handled
+    let prematureKeyPress = false; // Flag to track if the key press was premature
+
+    // Show ponds and arrow images
+    document.getElementById('pondsContainer').style.display = 'block';
+    document.getElementById('arrowImage').style.display = 'block';
+
+    // Add border box
+    document.getElementById('fish1Container').style.border = '2px solid black';
+    let boxTimeout = setTimeout(() => document.getElementById('fish1Container').style.border = '2px solid white', 2000);
+
+    // Add fish images in specified order
+    const fishOrder = [trial.fish1, trial.fish2, trial.fish3, trial.fish4, trial.fish5];
+    let counter = 1;
+    fishOrder.forEach(fish => {
+        let elementId = 'fish' + counter.toString() + 'Image';
+        let fishImage = document.getElementById(elementId);
+        fishImage.src = fish;
+        fishImage.style.display = 'block';
+        counter += 1;
+    });
+
+    // Clear feedback div every trial
+    feedbackDiv.style.display = 'none';
+
+    // Handle premature key press
+    const prematureResponseTimeout = setTimeout(() => {
+        prematureKeyPress = false;
+    }, 200);
+
+    // Set a timeout for the trial duration (2 seconds)
+    const trialDurationTimeout = setTimeout(() => {
+        document.removeEventListener('keydown', responseHandler); // Remove the stored responseHandler
+        document.removeEventListener('keyup', keyUpHandler); // Remove the keyup handler
+        let reactionTime = Date.now() - startTime;
+        let keyPress = 'none';
+        let correct = false;
+
+        if (keydownHandled && !prematureKeyPress && !keyHeldDown) {
+            // User responded within the trial duration
+            keyPress = lastKeyPressed;
+            correct = lastKeyPressed.toLowerCase().includes(trial.pond3);
+        }
+
+        recordResult(trial, reactionTime, keyPress, correct);
+        clearTimeout(boxTimeout);
+        feedback(correct);
+    }, 2000);
+
+    // Handle key response
+    let lastKeyPressed = '';
+    responseHandler = (event) => {
+        if (['ArrowLeft', 'ArrowUp', 'ArrowRight'].includes(event.key) && !keydownHandled && !keyHeldDown) {
+            if (prematureKeyPress) {
+                // Premature key press
+                feedbackDiv.innerHTML = 'You pressed too soon! 5 seconds waiting period now starts.';
+                feedbackDiv.style.display = 'block';
+                clearTimeout(trialDurationTimeout);
+                clearTimeout(prematureResponseTimeout);
+                setTimeout(() => {
+                    feedbackDiv.style.display = 'none';
+                    displayTrial(trial); // Restart the trial after 5 seconds
+                }, 5000);
+                return;
             }
-        };
 
-        // Set a timeout for the trial
-        const timeoutHandle = setTimeout(() => {
-            document.removeEventListener('keydown', responseHandler);
-            feedbackDiv.textContent = 'Oops! Too slow.';
-            feedbackDiv.style.display = 'block';
-            recordResult(trial, 2000, 'none', false);
-            clearTimeout(boxTimeout);
-            setTimeout(nextTrial, 1000); // Move to next trial after 1 second
-        }, 2000);
+            keydownHandled = true; // Set the flag to true to indicate a key press has been handled
+            keyHeldDown = true; // Set the flag to indicate a key is being held down
+            document.removeEventListener('keydown', responseHandler); // Remove the stored responseHandler
 
-        document.addEventListener('keydown', responseHandler);
+            resizeOverlays();
+            if (event.key === 'ArrowLeft') {
+                document.getElementById('leftPondOverlay').style.border = '3px solid black';
+            } else if (event.key === 'ArrowUp') {
+                document.getElementById('middlePondOverlay').style.border = '3px solid black';
+            } else if (event.key === 'ArrowRight') {
+                document.getElementById('rightPondOverlay').style.border = '3px solid black';
+            }
+
+            document.getElementById('fish1Container').style.border = '2px solid white';
+            lastKeyPressed = event.key;
+        }
+    };
+
+    // Handle key release
+    const keyUpHandler = (event) => {
+        if (['ArrowLeft', 'ArrowUp', 'ArrowRight'].includes(event.key)) {
+            keyHeldDown = false; // Reset the keyHeldDown flag when the key is released
+        }
+    };
+
+    document.addEventListener('keydown', responseHandler);
+    document.addEventListener('keyup', keyUpHandler);
     }
+
 
     // Function to provide feedback and move to the next trial
     function feedback(correct) {
         if (sessionType === 'practice') {
-            feedbackDiv.textContent = correct ? 'Correct!' : 'Incorrect!';
+            feedbackDiv.innerHTML = correct ? 'Correct!' : 'Incorrect!';
             feedbackDiv.style.display = 'block';
             setTimeout(() => {
                 feedbackDiv.style.display = 'none';
@@ -243,14 +345,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (event.code === 'Space') {
             if (sessionType === 'practice' && instructionStage < initialInstructionTexts.length) {
                 // Display the next initial instruction
-                instructionsDiv.textContent = initialInstructionTexts[instructionStage];
+                instructionsDiv.innerHTML = initialInstructionTexts[instructionStage];
                 instructionStage++;
             } else if (sessionType === 'practice' && instructionStage === initialInstructionTexts.length) {
                 // Start practice session after the last initial instruction
                 startSession('practice');
             } else if (sessionType === 'inter-session' && instructionStage < interSessionInstructionTexts.length) {
                 // Display the next inter-session instruction
-                instructionsDiv.textContent = interSessionInstructionTexts[instructionStage];
+                instructionsDiv.innerHTML = interSessionInstructionTexts[instructionStage];
                 instructionStage++;
             } else if (sessionType === 'inter-session' && instructionStage === interSessionInstructionTexts.length) {
                 // Start real experiment after the last inter-session instruction
@@ -267,14 +369,14 @@ document.addEventListener('DOMContentLoaded', () => {
         instructionsDiv.style.display = 'block';
         experimentDiv.style.display = 'none';
         instructionStage = 0; // Reset instruction stage for inter-session
-        instructionsDiv.textContent = interSessionInstructionTexts[instructionStage];
+        instructionsDiv.innerHTML = interSessionInstructionTexts[instructionStage];
     }
 
     // Function to end the experiment and send data to the server
     function endExperiment() {
         experimentDiv.style.display = 'none';
         instructionsDiv.style.display = 'block';
-        instructionsDiv.textContent = endInstructionText;
+        instructionsDiv.innerHTML = endInstructionText;
         
         // Implement data submission to server here
         console.log('Experiment complete. Data:', experimentData);
@@ -282,7 +384,6 @@ document.addEventListener('DOMContentLoaded', () => {
             type: 'labjs.data',
             json: JSON.stringify(experimentData)
         }, '*');
-        
     }
 
     function resizeOverlays() {
