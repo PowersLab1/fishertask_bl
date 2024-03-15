@@ -242,7 +242,7 @@ function displayTrial(trial) {
     // Handle premature key press
     const prematureResponseTimeout = setTimeout(() => {
         prematureKeyPress = false;
-    }, 200);
+    }, 500);
 
     // Set a timeout for the trial duration (2 seconds)
     const trialDurationTimeout = setTimeout(() => {
