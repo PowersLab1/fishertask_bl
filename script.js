@@ -1,25 +1,55 @@
 document.addEventListener('DOMContentLoaded', () => {
+    const imagesToPreload = [
+        'stimuli/arrow.png',
+        'stimuli/bead_b.png',
+        'stimuli/bead_g.png',
+        'stimuli/bead_y.png',
+        'stimuli/box.png',
+        'stimuli/feedback-arrow_left.png',
+        'stimuli/feedback-arrow_up.png',
+        'stimuli/feedback-arrow_right.png',
+        'stimuli/ponds.png',
+    ];
+
+    function preloadImages(urls, callback) {
+        let images = [];
+        let loadedCount = 0;
+        const totalCount = urls.length;
+
+        for (const url of urls) {
+            const image = new Image();
+            image.onload = function() {
+                loadedCount++;
+                if (loadedCount === totalCount) {
+                    callback();
+                }
+            };
+            image.src = url;
+            images.push(image);
+        }
+    }
+
+    preloadImages(imagesToPreload, function() {
+        startExperiment();
+    });
+});
+
+function startExperiment() {
     const instructionsDiv = document.getElementById('instructions');
     const feedbackDiv = document.getElementById('feedback');
     const experimentDiv = document.getElementById("experimentContainer");
-    const pondsImage = document.getElementById('pondsImage');
-    // Call resizeOverlays function when the image has loaded
     
-    
-    pondsImage.addEventListener('load', resizeOverlays);
-    
-
-    // Call resizeOverlays function when the window is resized
-    window.addEventListener('resize', resizeOverlays);
-    
-    // const colors = ["red", "blue", "green"];
-    // const baseUrl = "https://raw.githubusercontent.com/maxsupergreenwald/FisherResources/main/resources/";
     let experimentData = []; // Will hold JSON data from experiment trials
     let currentBlock = 0;
     let currentTrial = 0;
     let instructionStage = 0; // Tracks instruction stages (introduction vs. practice-to-experiment transition)
     let sessionType = 'practice'; // Transitions from 'practice' to 'intersession' to 'real'
     let blockTrials; // Will hold trials for the current block
+
+    // Store the responseHandler function outside of displayTrial
+    let responseHandler;
+    let keyHeldDown = false; // Flag to track if a key is being held down
+    let arrowImageElement = document.getElementById('feedbackImage');
     
     // Set block orders for practice and real experiment
     const practiceOrder = (Math.random() < 0.5) ? [practiceTrials1, practiceTrials2] : [practiceTrials2, practiceTrials1]; // randomize practice block order
@@ -115,29 +145,33 @@ document.addEventListener('DOMContentLoaded', () => {
     // Function to handle the transition to the next trial or block
     function nextTrial() {
         experimentDiv.style.display = 'block';
-        document.getElementById('leftPondOverlay').style.border = 'none';
-        document.getElementById('middlePondOverlay').style.border = 'none';
-        document.getElementById('rightPondOverlay').style.border = 'none';
+        // Overlay key feedback
+        // document.getElementById('leftPondOverlay').style.border = 'none';
+        // document.getElementById('middlePondOverlay').style.border = 'none';
+        // document.getElementById('rightPondOverlay').style.border = 'none';
         
         console.log("currentTrial: " + currentTrial)
 
+        // Navigate to next trial, next block, or next session
         if (currentTrial < blockTrials.length) {
+            // Going to the next trial 
             displayTrial(blockTrials[currentTrial]);
-            currentTrial++;
+            
         } else if (currentBlock+1 < (sessionType === 'practice' ? practiceOrder.length : blockOrder.length)) { // number of blocks per practice/real session
+            // Going to the next block
             currentBlock++;
             currentTrial = 0;
-            // Hide trials div
-            experimentDiv.style.display = 'none';
+            
             // Show resting display for 5 seconds before the next block
+            experimentDiv.style.display = 'none';
             instructionsDiv.style.display = 'block';
             instructionsDiv.innerHTML = 'Rest for a moment. Next day starts in 5 seconds.'
-
             setTimeout(() => {
-                feedbackDiv.style.display = 'none';
+                feedbackDiv.style.display = 'hidden';
                 blockTrials = blockTrials.slice(currentBlock * 20, (currentBlock + 1) * 20); // update blockTrials array
                 startSession(sessionType);
             }, 5000);
+
         } else if (sessionType === 'practice') {
             // Transition from practice to real experiment
             sessionType = 'real';
@@ -209,119 +243,155 @@ document.addEventListener('DOMContentLoaded', () => {
     //     document.addEventListener('keydown', responseHandler);
     // }
     // Store the responseHandler function outside of displayTrial
-let responseHandler;
-let keyHeldDown = false; // Flag to track if a key is being held down
+    let omitTooSoon;
+    function displayTrial(trial) {
+        let startTime = Date.now();
+        let keydownHandled = false; // Flag to track if a key press has been handled
+        let prematureKeyPress = true; // Flag to track if the key press was premature
+        let userResponse = false; // Flag to track if the user has responded
+        omitTooSoon = false;
+        // Clear feedback every trial, clear instructions div in case carry over from transition screen
+        instructionsDiv.style.display = 'none';
+        feedbackDiv.style.display = 'none';
 
-function displayTrial(trial) {
-    let startTime = Date.now();
-    let keydownHandled = false; // Flag to track if a key press has been handled
-    let prematureKeyPress = false; // Flag to track if the key press was premature
+        // Handle premature key press
+        const prematureResponseTimeout = setTimeout(() => {
+            prematureKeyPress = false;
+        }, 200);
 
-    // Show ponds and arrow images
-    document.getElementById('pondsContainer').style.display = 'block';
-    document.getElementById('arrowImage').style.display = 'block';
+        // Show ponds and arrow image
+        document.getElementById('pondsContainer').style.display = 'block';
+        document.getElementById('arrowImage').style.display = 'block';
 
-    // Add border box
-    document.getElementById('fish1Container').style.border = '2px solid black';
-    let boxTimeout = setTimeout(() => document.getElementById('fish1Container').style.border = '2px solid white', 2000);
+        // Add border box
+        document.getElementById('fish1Container').style.border = '2px solid black';
+        //let boxTimeout = setTimeout(() => document.getElementById('fish1Container').style.border = '2px solid white', 2000);
 
-    // Add fish images in specified order
-    const fishOrder = [trial.fish1, trial.fish2, trial.fish3, trial.fish4, trial.fish5];
-    let counter = 1;
-    fishOrder.forEach(fish => {
-        let elementId = 'fish' + counter.toString() + 'Image';
-        let fishImage = document.getElementById(elementId);
-        fishImage.src = fish;
-        fishImage.style.display = 'block';
-        counter += 1;
-    });
+        // Add fish images in specified order
+        const fishOrder = [trial.fish1, trial.fish2, trial.fish3, trial.fish4, trial.fish5];
+        let counter = 1;
+        fishOrder.forEach(fish => {
+            let elementId = 'fish' + counter.toString() + 'Image';
+            let fishImage = document.getElementById(elementId);
+            fishImage.src = fish;
+            fishImage.style.display = 'block';
+            counter += 1;
+        });
 
-    // Clear feedback div every trial
-    feedbackDiv.style.display = 'none';
+        // Handle key response
 
-    // Handle premature key press
-    const prematureResponseTimeout = setTimeout(() => {
-        prematureKeyPress = false;
-    }, 500);
-
-    // Set a timeout for the trial duration (2 seconds)
-    const trialDurationTimeout = setTimeout(() => {
-        document.removeEventListener('keydown', responseHandler); // Remove the stored responseHandler
-        document.removeEventListener('keyup', keyUpHandler); // Remove the keyup handler
-        let reactionTime = Date.now() - startTime;
-        let keyPress = 'none';
-        let correct = false;
-
-        if (keydownHandled && !prematureKeyPress && !keyHeldDown) {
-            // User responded within the trial duration
-            keyPress = lastKeyPressed;
-            correct = lastKeyPressed.toLowerCase().includes(trial.pond3);
-        }
-
-        recordResult(trial, reactionTime, keyPress, correct);
-        clearTimeout(boxTimeout);
-        feedback(correct);
-    }, 2000);
-
-    // Handle key response
-    let lastKeyPressed = '';
-    responseHandler = (event) => {
-        if (['ArrowLeft', 'ArrowUp', 'ArrowRight'].includes(event.key) && !keydownHandled && !keyHeldDown) {
-            if (prematureKeyPress) {
-                // Premature key press
-                feedbackDiv.innerHTML = 'You pressed too soon! 5 seconds waiting period now starts.';
-                feedbackDiv.style.display = 'block';
-                clearTimeout(trialDurationTimeout);
-                clearTimeout(prematureResponseTimeout);
-                setTimeout(() => {
-                    feedbackDiv.style.display = 'none';
-                    displayTrial(trial); // Restart the trial after 5 seconds
-                }, 5000);
-                return;
+        let lastKeyPressed = '';
+        
+        responseHandler = (event) => {
+            if (['ArrowLeft', 'ArrowUp', 'ArrowRight'].includes(event.key) && !keydownHandled && !keyHeldDown) {
+                if (prematureKeyPress) { // If it was a valid but premature key press
+                    // feedbackDiv.innerHTML = 'You pressed too soon! 5 seconds waiting period now starts.';
+                    feedbackDiv.innerHTML = 'You pressed too soon!';
+                    feedbackDiv.style.display = 'block';
+                    document.removeEventListener('keydown', responseHandler); // Remove the stored responseHandler
+                    omitTooSoon = true;
+                    // clearTimeout(trialDurationTimeout);
+                    // setTimeout(() => {
+                    //     feedbackDiv.style.display = 'none';
+                    //     handleResponse(trial, startTime, lastKeyPressed);
+                    // }, 5000);
+                    // return;
+                } else { // If it was a valid key press...
+                    keydownHandled = true; // Set the flag to true to indicate a key press has been handled
+                    keyHeldDown = true; // Set the flag to indicate a key is being held down
+                    document.removeEventListener('keydown', responseHandler); // Remove the stored responseHandler
+                    document.getElementById('fish1Container').style.border = '2px solid white';
+                    lastKeyPressed = event.key;
+                    userResponse = true;
+                    
+                    handleResponse(trial, startTime, lastKeyPressed);
+                }
             }
+        };
 
-            keydownHandled = true; // Set the flag to true to indicate a key press has been handled
-            keyHeldDown = true; // Set the flag to indicate a key is being held down
-            document.removeEventListener('keydown', responseHandler); // Remove the stored responseHandler
-
-            resizeOverlays();
-            if (event.key === 'ArrowLeft') {
-                document.getElementById('leftPondOverlay').style.border = '3px solid black';
-            } else if (event.key === 'ArrowUp') {
-                document.getElementById('middlePondOverlay').style.border = '3px solid black';
-            } else if (event.key === 'ArrowRight') {
-                document.getElementById('rightPondOverlay').style.border = '3px solid black';
+        // Handle key release
+        const keyUpHandler = (event) => {
+            if (['ArrowLeft', 'ArrowUp', 'ArrowRight'].includes(event.key)) {
+                keyHeldDown = false; // Reset the keyHeldDown flag when the key is released
             }
+        };
 
-            document.getElementById('fish1Container').style.border = '2px solid white';
-            lastKeyPressed = event.key;
-        }
-    };
+        document.addEventListener('keydown', responseHandler);
+        document.addEventListener('keyup', keyUpHandler);
 
-    // Handle key release
-    const keyUpHandler = (event) => {
-        if (['ArrowLeft', 'ArrowUp', 'ArrowRight'].includes(event.key)) {
-            keyHeldDown = false; // Reset the keyHeldDown flag when the key is released
-        }
-    };
+        // Set a timeout for the trial duration (2 seconds)
+        const trialDurationTimeout = setTimeout(() => {
+            if (!userResponse) {
+                document.removeEventListener('keydown', responseHandler); // Remove the stored responseHandler
+                document.removeEventListener('keyup', keyUpHandler); // Remove the keyup handler
+                handleResponse(trial, startTime, ''); // Call the handleResponse function with 'none' as the key press
+            }
+        }, 2000);
 
-    document.addEventListener('keydown', responseHandler);
-    document.addEventListener('keyup', keyUpHandler);
+        // // Set a timeout for the trial duration (2 seconds)
+        // const trialDurationTimeout = setTimeout(() => {
+        //     document.removeEventListener('keydown', responseHandler); // Remove the stored responseHandler
+        //     document.removeEventListener('keyup', keyUpHandler); // Remove the keyup handler
+        //     let reactionTime = Date.now() - startTime;
+        //     let keyPress = 'none';
+        //     let correct = '';
+        //     feedback(correct, keyPress); // shouldn't need this
+        //     nextTrial();
+
+        //     if (keydownHandled && !prematureKeyPress && !keyHeldDown) {
+        //         // User responded within the trial duration
+        //         keyPress = lastKeyPressed;
+        //         correct = lastKeyPressed.toLowerCase().includes(trial.pond3);
+        //     }
+
+        //     recordResult(trial, reactionTime, keyPress, correct);
+        //     clearTimeout(boxTimeout);
+        //     feedback(correct, lastKeyPressed);
+        // }, 2000);
     }
 
+    function handleResponse(trial, startTime, keyPress) {
+        let reactionTime = Date.now() - startTime;
+        let correct = keyPress.toLowerCase().includes(trial.pond3);
+        recordResult(trial, reactionTime, keyPress, correct);
+        currentTrial++;
+        feedback(correct, keyPress, omitTooSoon);
+    }
 
     // Function to provide feedback and move to the next trial
-    function feedback(correct) {
+    var additionalText = ''
+    function feedback(correct, key, omitTooSoon) {
         if (sessionType === 'practice') {
-            feedbackDiv.innerHTML = correct ? 'Correct!' : 'Incorrect!';
-            feedbackDiv.style.display = 'block';
-            setTimeout(() => {
-                feedbackDiv.style.display = 'none';
-                nextTrial();
-            }, 1000); // Show feedback for 1 second
+            additionalText = correct ? 'Correct!' : 'Incorrect!';
         } else {
-            nextTrial();
+            additionalText = '';
         }
+
+        if (key === 'ArrowLeft') {
+            feedbackDiv.innerHTML = 'You pressed LEFT. ' + additionalText;
+            arrowImageElement.src = 'stimuli/feedback-arrow_left.png';
+            arrowImageElement.style.display = 'block';
+        } else if (key === 'ArrowUp') {
+            feedbackDiv.innerHTML = 'You pressed UP. ' + additionalText;
+            arrowImageElement.src = 'stimuli/feedback-arrow_up.png';
+            arrowImageElement.style.display = 'block';
+        } else if (key === 'ArrowRight') {
+            feedbackDiv.innerHTML = 'You pressed RIGHT. ' + additionalText;
+            arrowImageElement.src = 'stimuli/feedback-arrow_right.png';
+            arrowImageElement.style.display = 'block';
+        } else { // no response
+            arrowImageElement.src = '';
+            arrowImageElement.style.display = 'none';
+            if (!omitTooSoon) { feedbackDiv.innerHTML = 'Oops! Too slow.'; }
+            else { feedbackDiv.innerHTML = 'Please do not to rush through your answers!'; }
+        }
+        feedbackDiv.style.display = 'block';
+        
+        setTimeout(() => {
+            feedbackDiv.style.display = 'none';
+            arrowImageElement.style.display = 'none';
+            nextTrial();
+        }, 1000); // Show feedback for 1 second
         
     }
 
@@ -341,24 +411,36 @@ function displayTrial(trial) {
 
     // Start the experiment when the spacebar is pressed
     // Handle key press events
+    let turnOffSpace = false;
     document.addEventListener('keydown', (event) => {
         if (event.code === 'Space') {
             if (sessionType === 'practice' && instructionStage < initialInstructionTexts.length) {
+                console.log("contingency 1")
                 // Display the next initial instruction
                 instructionsDiv.innerHTML = initialInstructionTexts[instructionStage];
                 instructionStage++;
             } else if (sessionType === 'practice' && instructionStage === initialInstructionTexts.length) {
-                // Start practice session after the last initial instruction
-                startSession('practice');
+                console.log("contingency 2")
+                if (!turnOffSpace){
+                    // Start practice session after the last initial instruction
+                    console.log("contingency 2b")
+                    startSession('practice');
+                    turnOffSpace = true;
+                } else {
+                    // Once the practice session starts, don't implement above code again to prevent bugs
+                    console.log("space bar pressed during trial --> ignore!")
+                }
             } else if (sessionType === 'inter-session' && instructionStage < interSessionInstructionTexts.length) {
+                console.log("contingency 3")
                 // Display the next inter-session instruction
                 instructionsDiv.innerHTML = interSessionInstructionTexts[instructionStage];
                 instructionStage++;
             } else if (sessionType === 'inter-session' && instructionStage === interSessionInstructionTexts.length) {
+                console.log("contingency 4")
                 // Start real experiment after the last inter-session instruction
                 sessionType = 'real';
                 startSession('real');
-            }
+            } 
         }
     });
 
@@ -386,22 +468,4 @@ function displayTrial(trial) {
         }, '*');
     }
 
-    function resizeOverlays() {
-        setTimeout(function() {
-            const imageWidth = pondsImage.offsetWidth;
-            const imageLeft = pondsImage.getBoundingClientRect().left - 5;
-            const overlayWidth = Math.min(imageWidth / 3 - 5, 333);
-            
-            console.log("imageLeft: " + imageLeft);
-    
-            leftPondOverlay.style.width = `${overlayWidth}px`;
-            middlePondOverlay.style.width = `${overlayWidth}px`;
-            rightPondOverlay.style.width = `${overlayWidth}px`;
-    
-            leftPondOverlay.style.left = `${imageLeft}px`;
-            middlePondOverlay.style.left = `${imageLeft + overlayWidth}px`;
-            rightPondOverlay.style.left = `${imageLeft + 2*overlayWidth}px`;
-        }, 500); // Even a 0ms timeout can help by pushing the function to the end of the call stack
-    }
-
-});
+};

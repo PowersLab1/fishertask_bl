@@ -1,12 +1,3 @@
-#body, html {
-    height: 100%;
-    margin: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: Arial, sans-serif;
-    background-color: #ffffff;
-}
 #instructions {
     font-size: 30px;
     font-family: Verdana;
@@ -48,11 +39,17 @@
 #feedback {
     text-align: center;
     padding: 15px;
-    background-color: yellow;
+    background-color: #ffbc5c;
     font-size: 24px;
     font-family: Verdana;
+    height: 25px;
+    /* z-index: 1; */
 }
-
+#feedbackImage {
+    width: 100px; 
+    height: auto;
+    margin: 0 auto;
+}
 #pondsContainer {
     position: relative;
     margin: 0 auto;
@@ -68,6 +65,7 @@
     display: block;
     /* border: 2px solid black; */
 }
+
 #overlay {
     /* display: flex; */
     position: absolute;
