@@ -1,9 +1,9 @@
 document.addEventListener('DOMContentLoaded', () => {
     const imagesToPreload = [
         'stimuli/arrow.png',
-        'stimuli/bead_b.png',
-        'stimuli/bead_g.png',
-        'stimuli/bead_y.png',
+        'stimuli/bead_b.PNG',
+        'stimuli/bead_g.PNG',
+        'stimuli/bead_y.PNG',
         'stimuli/box.png',
         'stimuli/feedback-arrow_left.png',
         'stimuli/feedback-arrow_up.png',
