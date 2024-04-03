@@ -86,29 +86,33 @@ function startExperiment() {
 
     // Instructions text for each of the screens
     const initialInstructionTexts = [
-        "Welcome to the Which Pond? Game"+
+        "Welcome to the 'Guess Which Pond! Game'"+
             "<br><br><br>Press SPACE bar to continue.",
-        "Which Pond? Fishing Game"+
-            "<br><br>Imagine a boy that goes fishing for 10 days." +
-            "<br><br>There are three ponds, each containing fish of different colors: blue, yellow, and green." +
+        "Guess Which Pond! Fishing Game"+
+            "<br><br>Imagine a fisherman that goes fishing for 10 days." +
+            "<br><br>There are 3 ponds, each containing a mix of fish of different colors: blue, yellow, and green." +
             "<br><br>In each pond the majority of the fish are of a single color."+
             "<br><br><br>Press SPACE bar to proceed.",
-        "Each day, the boy catches 15 fish. He will show you the fish he catches one by one, shown in the black square." +
-            '<br><br>Each turn, you will guess from which pond he is fishing.' +
-            '<br><br>The boy will pick a different pond at the beginning of a new day, and he may or may not change ponds within the same day.' + 
+        "Each day, the fisherman catches 15 fish. He will show you each fish he catches one by one, shown in the black square." +
+            '<br><br>Each turn, you will guess from which pond he got that fish of that color.' +
+            '<br><br>The fisherman picks a different pond at the beginning of a new day, AND he may (or may not!) CHANGE ponds within the SAME day.' + 
+            '<br><br>So catching a fish of a color that is rare in the pond he has been fishing in could be due to chance...' + 
+            '<br><br>OR it could mean he switched to a different pond!' + 
             '<br><br><br>Press SPACE bar to proceed.',
         'A correct guess is rewarded with $1, while an incorrect guess earns $0.' +
-            '<br><br>At the end of the game, you will receive the total bonus from one randomly selected session.' + 
-            '<br><br>The maximum bonus you can receive from this game is $15, if you guess correctly for all trials.' +
+            '<br><br>Try to win as much money as possible -- the top 20% (1/5) participants will get $2 extra compensation!' + 
             '<br><br><br>Press SPACE bar to continue',
         'Press LEFT, UP or RIGHT arrows on your keyboard to select your pond.' +
+            '<br><br>We will start with a PRACTICE session of 2 days of fishing.' + 
+            '<br><br>During these PRACTICE days (but NOT the real game) you will be told whether the pond you guessed was correct' + 
             '<br><br><br>Press SPACE bar to start the practice session.'
     ];
     
     const interSessionInstructionTexts = [
-        "Practice session complete." +
+        "That's it for the 2 days of practice!" +
             "<br><br><br>Press SPACE bar to continue.",
-        "The real experiment will now begin." +
+        "The real game (10 days with 15 fish per day) will now begin" +
+            '<br><br>The game is the same as the practice -- Except you WILL NOT RECIEVE FEEDBACK ON WHETHER YOU ARE RIGHT OR WRONG!!' +
             '<br><br>Press LEFT, UP or RIGHT arrows on your keyboard to select your pond.' +
             "<br><br>Try to respond as quickly and accurately as possible." +
             "<br><br><br>Press SPACE bar to start."
@@ -165,7 +169,7 @@ function startExperiment() {
             // Show resting display for 5 seconds before the next block
             experimentDiv.style.display = 'none';
             instructionsDiv.style.display = 'block';
-            instructionsDiv.innerHTML = 'Rest for a moment. Next day starts in 5 seconds.'
+            instructionsDiv.innerHTML = 'Rest for a moment. The next day starts in 5 seconds.'
             setTimeout(() => {
                 feedbackDiv.style.display = 'hidden';
                 blockTrials = blockTrials.slice(currentBlock * 20, (currentBlock + 1) * 20); // update blockTrials array
