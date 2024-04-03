@@ -93,7 +93,7 @@ function startExperiment() {
             "<br><br>There are 3 ponds, each containing a mix of fish of different colors: blue, yellow, and green." +
             "<br><br>In each pond the majority of the fish are of a single color."+
             "<br><br><br>Press SPACE bar to proceed.",
-        "Each day, the fisherman catches 15 fish. He will show you each fish he catches one by one, shown in the black square." +
+        "Each day, the fisherman catches 15 fish. He will show you each fish he catches one by one (shown in a black square on the screen)." +
             '<br><br>Each turn, you will guess from which pond he got that fish of that color.' +
             '<br><br>The fisherman picks a different pond at the beginning of a new day, AND he may (or may not!) CHANGE ponds within the SAME day.' + 
             '<br><br>So catching a fish of a color that is rare in the pond he has been fishing in could be due to chance...' + 
@@ -102,16 +102,16 @@ function startExperiment() {
         'A correct guess is rewarded with $1, while an incorrect guess earns $0.' +
             '<br><br>Try to win as much money as possible -- the top 20% (1/5) participants will get $2 extra compensation!' + 
             '<br><br><br>Press SPACE bar to continue',
-        'Press LEFT, UP or RIGHT arrows on your keyboard to select your pond.' +
+        'Press LEFT, UP or RIGHT arrows on your keyboard to pick the left, middle, or right pond.' +
             '<br><br>We will start with a PRACTICE session of 2 days of fishing.' + 
-            '<br><br>During these PRACTICE days (but NOT the real game) you will be told whether the pond you guessed was correct' + 
+            '<br><br>During these PRACTICE days (but NOT the real game) you will be told whether the pond you guessed was correct!' + 
             '<br><br><br>Press SPACE bar to start the practice session.'
     ];
     
     const interSessionInstructionTexts = [
         "That's it for the 2 days of practice!" +
             "<br><br><br>Press SPACE bar to continue.",
-        "The real game (10 days with 15 fish per day) will now begin" +
+        "The real game (10 days with 15 fish per day) will now begin!" +
             '<br><br>The game is the same as the practice -- Except you WILL NOT RECIEVE FEEDBACK ON WHETHER YOU ARE RIGHT OR WRONG!!' +
             '<br><br>Press LEFT, UP or RIGHT arrows on your keyboard to select your pond.' +
             "<br><br>Try to respond as quickly and accurately as possible." +
@@ -261,7 +261,7 @@ function startExperiment() {
         // Handle premature key press
         const prematureResponseTimeout = setTimeout(() => {
             prematureKeyPress = false;
-        }, 200);
+        }, 250);
 
         // Show ponds and arrow image
         document.getElementById('pondsContainer').style.display = 'block';
@@ -323,14 +323,14 @@ function startExperiment() {
         document.addEventListener('keydown', responseHandler);
         document.addEventListener('keyup', keyUpHandler);
 
-        // Set a timeout for the trial duration (2 seconds)
+        // Set a timeout for the trial duration (3 seconds)
         const trialDurationTimeout = setTimeout(() => {
             if (!userResponse) {
                 document.removeEventListener('keydown', responseHandler); // Remove the stored responseHandler
                 document.removeEventListener('keyup', keyUpHandler); // Remove the keyup handler
                 handleResponse(trial, startTime, ''); // Call the handleResponse function with 'none' as the key press
             }
-        }, 2000);
+        }, 3000);
 
         // // Set a timeout for the trial duration (2 seconds)
         // const trialDurationTimeout = setTimeout(() => {
@@ -372,15 +372,15 @@ function startExperiment() {
         }
 
         if (key === 'ArrowLeft') {
-            feedbackDiv.innerHTML = 'You pressed LEFT. ' + additionalText;
+            feedbackDiv.innerHTML = 'LEFT Pond ' + additionalText;
             arrowImageElement.src = 'stimuli/feedback-arrow_left.png';
             arrowImageElement.style.display = 'block';
         } else if (key === 'ArrowUp') {
-            feedbackDiv.innerHTML = 'You pressed UP. ' + additionalText;
+            feedbackDiv.innerHTML = 'MIDDLE Pond. ' + additionalText;
             arrowImageElement.src = 'stimuli/feedback-arrow_up.png';
             arrowImageElement.style.display = 'block';
         } else if (key === 'ArrowRight') {
-            feedbackDiv.innerHTML = 'You pressed RIGHT. ' + additionalText;
+            feedbackDiv.innerHTML = 'RIGHT Pond ' + additionalText;
             arrowImageElement.src = 'stimuli/feedback-arrow_right.png';
             arrowImageElement.style.display = 'block';
         } else { // no response
