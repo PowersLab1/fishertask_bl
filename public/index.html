@@ -92,6 +92,7 @@
             margin-top: 10px; /* used to be 50px but then the feedback was displayed too low on the screen*/
             margin-bottom: 50px;
             text-align: center;
+            display: block; /* Added by Max so that pond displays*/
         }
         #pondsImage {
             margin: 0 auto;
@@ -135,7 +136,7 @@
     <div id="instructions">Instructions</div>
 
     <div id="experimentContainer">
-        <div id="pondsContainer" style="display: none;">
+        <div id="pondsContainer">   <!--style="display: none;"  removed this so that pond displays from start-->
             <img id="pondsImage" src="stimuli/ponds.png">
             <!-- <div id="overlay">
                 <div id="leftPondOverlay"></div>
