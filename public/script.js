@@ -409,6 +409,8 @@ function startExperiment() {
             keyPress,
             correct,
             timestamp: new Date().toISOString(),
+            blockOrder,
+            correctPond: trial.pond3,
             session: sessionType
         });
     }
