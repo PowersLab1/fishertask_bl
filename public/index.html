@@ -30,15 +30,6 @@
     
     <title>Fishing Game</title>
     <style>
-        #body, html {
-            height: 100%;
-            margin: 0;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-family: Arial, sans-serif;
-            background-color: #ffffff;
-        }
         #instructions {
             font-size: 30px;
             font-family: Verdana;
@@ -80,11 +71,17 @@
         #feedback {
             text-align: center;
             padding: 15px;
-            background-color: yellow;
+            background-color: #ffbc5c;
             font-size: 24px;
             font-family: Verdana;
+            height: 25px;
+            /* z-index: 1; */
         }
-
+        #feedbackImage {
+            width: 100px; 
+            height: auto;
+            margin: 0 auto;
+        }
         #pondsContainer {
             position: relative;
             margin: 0 auto;
@@ -100,6 +97,7 @@
             display: block;
             /* border: 2px solid black; */
         }
+
         #overlay {
             /* display: flex; */
             position: absolute;
@@ -136,11 +134,11 @@
     <div id="experimentContainer">
         <div id="pondsContainer" style="display: none;">
             <img id="pondsImage" src="stimuli/ponds.png">
-            <div id="overlay">
+            <!-- <div id="overlay">
                 <div id="leftPondOverlay"></div>
                 <div id="middlePondOverlay"></div>
                 <div id="rightPondOverlay"></div>
-            </div>
+            </div> -->
         </div>
         <div id="trialContainer" style="display: flex; align-items: center;">
             <div id="fishImagesContainer">
@@ -155,7 +153,11 @@
             </div>
             <img id="arrowImage" src="stimuli/arrow.png" style="display: none;">
         </div>
-        <div id="feedback" style="display:none;"></div>
+        <img id="feedbackImage" src="" alt="Feedback Arrow Image" style="display: none;">    
+
+        <div id="feedback" style="display:none;">
+
+        </div>
     </div> 
 
     
