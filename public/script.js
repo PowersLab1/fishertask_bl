@@ -58,6 +58,7 @@ function startExperiment() {
     const blockOrderC = [mainTrials6, mainTrials7, mainTrials8, mainTrials1, mainTrials2, mainTrials4, mainTrials3, mainTrials9, mainTrials5, mainTrials10];
     let blockOrder;
     setBlockOrder(); 
+    console.log(blockOrder);
     
     function setBlockOrder() {
         const randomIndex = Math.floor(Math.random() * 3);
@@ -86,36 +87,36 @@ function startExperiment() {
 
     // Instructions text for each of the screens
     const initialInstructionTexts = [
-        "Welcome to the 'Guess Which Pond! Game'"+
-            "<br><br><br>Press SPACE bar to continue.",
-        "Guess Which Pond! Fishing Game"+
+        'Welcome to the "Guess Which Pond!" Game'+
+            '<br><br><br>Press "Q" Key to continue.',
+        '"Guess Which Pond!" Fishing Game'+
             "<br><br>Imagine a fisherman that goes fishing for 10 days." +
             "<br><br>There are 3 ponds, each containing a mix of fish of different colors: blue, yellow, and green." +
             "<br><br>In each pond the majority of the fish are of a single color."+
-            "<br><br><br>Press SPACE bar to proceed.",
+            '<br><br><br>Press "Q" Key to proceed.',
         "Each day, the fisherman catches 15 fish. He will show you each fish he catches one by one (shown in a black square on the screen)." +
             '<br><br>Each turn, you will guess from which pond he got that fish of that color.' +
             '<br><br>The fisherman picks a different pond at the beginning of a new day, AND he may (or may not!) CHANGE ponds within the SAME day.' + 
             '<br><br>So catching a fish of a color that is rare in the pond he has been fishing in could be due to chance...' + 
             '<br><br>OR it could mean he switched to a different pond!' + 
-            '<br><br><br>Press SPACE bar to proceed.',
+            '<br><br><br>Press "Q" Key to proceed.',
         'A correct guess is rewarded with $1, while an incorrect guess earns $0.' +
             '<br><br>Try to win as much money as possible -- the top 20% (1/5) participants will get $2 extra compensation!' + 
-            '<br><br><br>Press SPACE bar to continue',
+            '<br><br><br>Press "Q" Key to continue',
         'Press LEFT, UP or RIGHT arrows on your keyboard to pick the left, middle, or right pond.' +
             '<br><br>We will start with a PRACTICE session of 2 days of fishing.' + 
             '<br><br>During these PRACTICE days (but NOT the real game) you will be told whether the pond you guessed was correct!' + 
-            '<br><br><br>Press SPACE bar to start the practice session.'
+            '<br><br><br>Press "Q" Key to start the practice session.'
     ];
     
     const interSessionInstructionTexts = [
         "That's it for the 2 days of practice!" +
-            "<br><br><br>Press SPACE bar to continue.",
+            '<br><br><br>Press "Q" Key to continue.',
         "The real game (10 days with 15 fish per day) will now begin!" +
             '<br><br>The game is the same as the practice -- Except you WILL NOT RECIEVE FEEDBACK ON WHETHER YOU ARE RIGHT OR WRONG!!' +
             '<br><br>Press LEFT, UP or RIGHT arrows on your keyboard to select your pond.' +
             "<br><br>Try to respond as quickly and accurately as possible." +
-            "<br><br><br>Press SPACE bar to start."
+            '<br><br><br>Press "Q" Key to start.'
     ];
 
     const endInstructionText = " ";
@@ -330,7 +331,7 @@ function startExperiment() {
                 document.removeEventListener('keyup', keyUpHandler); // Remove the keyup handler
                 handleResponse(trial, startTime, ''); // Call the handleResponse function with 'none' as the key press
             }
-        }, 3000);
+        }, 300); //MUST CHANGE BACK TO 3000!!!
 
         // // Set a timeout for the trial duration (2 seconds)
         // const trialDurationTimeout = setTimeout(() => {
@@ -409,6 +410,8 @@ function startExperiment() {
             keyPress,
             correct,
             timestamp: new Date().toISOString(),
+            // blockOrder,
+            // correctPond: trial.pond3,
             session: sessionType
         });
     }
@@ -417,7 +420,7 @@ function startExperiment() {
     // Handle key press events
     let turnOffSpace = false;
     document.addEventListener('keydown', (event) => {
-        if (event.code === 'Space') {
+        if (event.code === 'KeyQ') {
             if (sessionType === 'practice' && instructionStage < initialInstructionTexts.length) {
                 console.log("contingency 1")
                 // Display the next initial instruction
