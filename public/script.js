@@ -53,22 +53,33 @@ function startExperiment() {
     
     // Set block orders for practice and real experiment
     const practiceOrder = (Math.random() < 0.5) ? [practiceTrials1, practiceTrials2] : [practiceTrials2, practiceTrials1]; // randomize practice block order
-    const blockOrderA = [mainTrials1, mainTrials2, mainTrials3, mainTrials4, mainTrials5, mainTrials6, mainTrials7, mainTrials8, mainTrials9, mainTrials10];
-    const blockOrderB = [mainTrials10, mainTrials2, mainTrials8, mainTrials3, mainTrials1, mainTrials4, mainTrials5, mainTrials7, mainTrials9, mainTrials6];
-    const blockOrderC = [mainTrials6, mainTrials7, mainTrials8, mainTrials1, mainTrials2, mainTrials4, mainTrials3, mainTrials9, mainTrials5, mainTrials10];
-    let blockOrder;
-    setBlockOrder(); 
-    console.log(blockOrder);
-    
-    function setBlockOrder() {
-        const randomIndex = Math.floor(Math.random() * 3);
-        console.log("randomIndex: " + randomIndex)
-        switch (randomIndex) {
-            case 0: blockOrder = blockOrderA; break;
-            case 1: blockOrder = blockOrderB; break;
-            case 2: blockOrder = blockOrderC; break;
+    const mainTrials = [mainTrials1, mainTrials2, mainTrials3, mainTrials4, mainTrials5, mainTrials6, mainTrials7, mainTrials8, mainTrials9, mainTrials10];
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]]; // Swap elements
         }
     }
+    
+    // Create blockOrder and shuffle it
+    let blockOrder = [...mainTrials]; // Clone the mainTrials array to avoid mutating the original
+    shuffleArray(blockOrder);
+    console.log(blockorder)
+    // const blockOrderA = [mainTrials1, mainTrials2, mainTrials3, mainTrials4, mainTrials5, mainTrials6, mainTrials7, mainTrials8, mainTrials9, mainTrials10];
+    // const blockOrderB = [mainTrials10, mainTrials2, mainTrials8, mainTrials3, mainTrials1, mainTrials4, mainTrials5, mainTrials7, mainTrials9, mainTrials6];
+    // const blockOrderC = [mainTrials6, mainTrials7, mainTrials8, mainTrials1, mainTrials2, mainTrials4, mainTrials3, mainTrials9, mainTrials5, mainTrials10];
+    // let blockOrder;
+    // setBlockOrder(); 
+    // console.log(blockOrder);
+    
+    // function setBlockOrder() {
+    //     const randomIndex = Math.floor(Math.random() * 3);
+    //     console.log("randomIndex: " + randomIndex)
+    //     switch (randomIndex) {
+    //         case 0: blockOrder = blockOrderA; break;
+    //         case 1: blockOrder = blockOrderB; break;
+    //         case 2: blockOrder = blockOrderC; break;
+    //     }
 
     
     // Generate trials for practice and real experiment
