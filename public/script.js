@@ -422,7 +422,7 @@ function startExperiment() {
             correct,
             timestamp: new Date().toISOString(),
             // blockOrder,
-            // correctPond: trial.pond3,
+            correctPond: trial.pond3,
             session: sessionType
         });
     }
