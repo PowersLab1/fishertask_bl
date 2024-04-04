@@ -369,7 +369,8 @@ function startExperiment() {
     function handleResponse(trial, startTime, keyPress) {
         let reactionTime = Date.now() - startTime;
         let correct = keyPress.toLowerCase().includes(trial.pond3); //so basically this checks whether or not the key press corresponds to the correct pond in the current trial and marks it as TRUE or FALSE
-        recordResult(trial, reactionTime, keyPress, correct);
+        let correctPond = trial.pond3;
+        recordResult(trial, reactionTime, keyPress, correct, correctPond);
         currentTrial++;
         feedback(correct, keyPress, omitTooSoon);
     }
@@ -412,7 +413,8 @@ function startExperiment() {
     }
 
     // Function to record the result of a trial
-    function recordResult(trial, reactionTime, keyPress, correct) {
+    function recordResult(trial, reactionTime, keyPress, correct, correctPond) {
+        console.log(trial.pond3);
         experimentData.push({
             block: currentBlock,
             trial: currentTrial,
@@ -422,7 +424,7 @@ function startExperiment() {
             correct,
             timestamp: new Date().toISOString(),
             // blockOrder,
-            correctPond: trial.pond3,
+            correctPond,
             session: sessionType
         });
     }
