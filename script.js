@@ -413,6 +413,7 @@ function startExperiment() {
 
     // Function to record the result of a trial
     function recordResult(trial, reactionTime, keyPress, correct) {
+        console.log(trial.pond3);
         experimentData.push({
             block: currentBlock,
             trial: currentTrial,
