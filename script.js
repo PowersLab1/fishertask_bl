@@ -58,6 +58,7 @@ function startExperiment() {
     const blockOrderC = [mainTrials6, mainTrials7, mainTrials8, mainTrials1, mainTrials2, mainTrials4, mainTrials3, mainTrials9, mainTrials5, mainTrials10];
     let blockOrder;
     setBlockOrder(); 
+    console.log(blockOrder);
     
     function setBlockOrder() {
         const randomIndex = Math.floor(Math.random() * 3);
@@ -330,7 +331,7 @@ function startExperiment() {
                 document.removeEventListener('keyup', keyUpHandler); // Remove the keyup handler
                 handleResponse(trial, startTime, ''); // Call the handleResponse function with 'none' as the key press
             }
-        }, 3000);
+        }, 300); //MUST CHANGE BACK TO 3000!!!
 
         // // Set a timeout for the trial duration (2 seconds)
         // const trialDurationTimeout = setTimeout(() => {
@@ -409,6 +410,8 @@ function startExperiment() {
             keyPress,
             correct,
             timestamp: new Date().toISOString(),
+            // blockOrder,
+            // correctPond: trial.pond3,
             session: sessionType
         });
     }
