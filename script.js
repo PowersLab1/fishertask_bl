@@ -102,12 +102,12 @@ function startExperiment() {
             '<br><br><br>Press "Q" Key to continue.',
         '"Guess Which Pond!" Fishing Game'+
             "<br><br>Imagine a fisherman that goes fishing for 10 days." +
-            "<br><br>There are 3 ponds, each containing a mix of fish of different colors: blue, yellow, and green." +
+            "<br><br>He fishes from 3 ponds, each containing a mix of fish of different colors: blue, yellow, and green." +
             "<br><br>In each pond the majority of the fish are of a single color."+
             '<br><br><br>Press "Q" Key to proceed.',
         "Each day, the fisherman catches 15 fish. He will show you each fish he catches one by one (shown in a black square on the screen)." +
             '<br><br>Each turn, you will guess from which pond he got that fish of that color.' +
-            '<br><br>The fisherman picks a different pond at the beginning of a new day, AND he may (or may not!) CHANGE ponds within the SAME day.' + 
+            '<br><br>The fisherman picks a new pond at the beginning of a new day, AND he may (or may not!) OCCASIONALLY CHANGE ponds within the SAME day.' + 
             '<br><br>So catching a fish of a color that is rare in the pond he has been fishing in could be due to chance...' + 
             '<br><br>OR it could mean he switched to a different pond!' + 
             '<br><br><br>Press "Q" Key to proceed.',
@@ -273,7 +273,7 @@ function startExperiment() {
         // Handle premature key press
         const prematureResponseTimeout = setTimeout(() => {
             prematureKeyPress = false;
-        }, 250);
+        }, 200);
 
         // Show ponds and arrow image
         document.getElementById('pondsContainer').style.display = 'block';
@@ -302,7 +302,7 @@ function startExperiment() {
             if (['ArrowLeft', 'ArrowUp', 'ArrowRight'].includes(event.key) && !keydownHandled && !keyHeldDown) {
                 if (prematureKeyPress) { // If it was a valid but premature key press
                     // feedbackDiv.innerHTML = 'You pressed too soon! 5 seconds waiting period now starts.';
-                    feedbackDiv.innerHTML = 'You pressed too soon!';
+                    feedbackDiv.innerHTML = 'You picked too quickly!';
                     feedbackDiv.style.display = 'block';
                     document.removeEventListener('keydown', responseHandler); // Remove the stored responseHandler
                     omitTooSoon = true;
@@ -342,7 +342,7 @@ function startExperiment() {
                 document.removeEventListener('keyup', keyUpHandler); // Remove the keyup handler
                 handleResponse(trial, startTime, ''); // Call the handleResponse function with 'none' as the key press
             }
-        }, 300); //MUST CHANGE BACK TO 3000!!!
+        }, 3000); //MUST CHANGE BACK TO 3000!!!
 
         // // Set a timeout for the trial duration (2 seconds)
         // const trialDurationTimeout = setTimeout(() => {
@@ -405,7 +405,7 @@ function startExperiment() {
             arrowImageElement.src = '';
             arrowImageElement.style.display = 'none';
             if (!omitTooSoon) { feedbackDiv.innerHTML = 'Oops! Too slow.'; }
-            else { feedbackDiv.innerHTML = 'Please do not to rush through your answers!'; }
+            else { feedbackDiv.innerHTML = 'Please do not try to rush through the game!'; }
         }
         feedbackDiv.style.display = 'block';
         
