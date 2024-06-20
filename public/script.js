@@ -99,10 +99,10 @@ function startExperiment() {
     // Instructions text for each of the screens
     const initialInstructionTexts = [
         'Welcome to the "Guess Which Pond!" Game'+
-            '<br><br><br>Press "Q" Key to continue.',
+            '<br><br><br>Press "Q" Key (you may need to press twice) to continue.',
         '"Guess Which Pond!" Fishing Game'+
             "<br><br>Imagine a fisherman that goes fishing for 10 days." +
-            "<br><br>He fishes from 3 ponds, each containing a mix of fish of different colors: blue, yellow, and green." +
+            "<br><br>He fishes from 3 ponds, each containing a mix of fish of 3 different colors (pictured below!)." +
             "<br><br>In each pond the majority of the fish are of a single color."+
             '<br><br><br>Press "Q" Key to proceed.',
         "Each day, the fisherman catches 15 fish. He will show you each fish he catches one by one (shown in a black square on the screen)." +
@@ -438,7 +438,7 @@ function startExperiment() {
         });
     }
 
-    // Start the experiment when the spacebar is pressed
+    // Start the experiment when the q is pressed
     // Handle key press events
     let turnOffSpace = false;
     document.addEventListener('keydown', (event) => {
