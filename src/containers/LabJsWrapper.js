@@ -78,7 +78,7 @@ class LabJsWrapper extends Component {
     console.log('This is the latest labjswrapper.js')
     var that = this;
 
-    const taskData = sessionStorage.getItem('taskData');
+    const taskData = sessionStorage.getItem('fishertaskData');
     if (taskData) {
       console.log('taskData found in sessionStorage');
       const parsedData = JSON.parse(taskData);
